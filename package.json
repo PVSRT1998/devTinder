@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/app.js",
+    "dev1": "nodemon src/index.js",
     "start": "node src/app.js"
   },
   "keywords": [
@@ -14,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.8.0"
   }
 }
