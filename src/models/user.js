@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const secretKey = "Dev@TinderSecretKey"; // Replace with your own secret key
 
 const userSchema = new Schema({
     firstName: {
@@ -46,6 +49,17 @@ const userSchema = new Schema({
 }, {
     timestamps: true
 });
+
+userSchema.methods.validatePassword = function(password) {
+    const user = this;
+    return bcrypt.compare(password, user.password);
+}
+
+userSchema.methods.getJWT = function() {
+    const user = this;
+    const payload = { userId: user._id };
+    return jwt.sign(payload, secretKey, { expiresIn: '1h' });
+}
 
 const User = mongoose.model("User", userSchema);
 

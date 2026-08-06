@@ -4,10 +4,14 @@ const app = express();
 const User = require('./models/user');
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const { userAuth } = require('./middlewares/auth');
 
 const port = 3001;
 
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 
 app.patch('/user', async (req, res) => {
@@ -90,20 +94,35 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { emailId, password } = req.body;
-        const isValidEmail = await User.findOne({ emailId });
+        const user = await User.findOne({ emailId });
 
-        if(!isValidEmail) {
+        if(!user) {
             return res.status(400).send("Invalid credentials");
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, isValidEmail.password);
+        const isPasswordMatch = await user.validatePassword(password);
         if(!isPasswordMatch) {
             return res.status(400).send("Invalid credentials");
         } 
+
+        const token = user.getJWT();
+        res.cookie("token", token);
+
         return res.send("Login successful");
     } catch (err) {
         console.error('Error during login', err);
         res.status(500).send("Error during login");
+    }
+});
+
+app.get('/profile', userAuth, async (req, res) => {
+    try {
+        const user = req.user; // Access the authenticated user from the request
+
+        res.send(user);
+    } catch (err) {
+        console.error('Error fetching user profile', err);
+        res.status(500).send("Error fetching user profile");
     }
 });
 
