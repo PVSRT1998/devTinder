@@ -55,6 +55,13 @@ userSchema.methods.validatePassword = function(password) {
     return bcrypt.compare(password, user.password);
 }
 
+userSchema.methods.EncryptPassword = async function(password) {
+    const user = this;
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+}
+
 userSchema.methods.getJWT = function() {
     const user = this;
     const payload = { userId: user._id };
