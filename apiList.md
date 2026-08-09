@@ -25,3 +25,10 @@
 
 
  ### Status: igone, interested, accepted, rejected
+
+
+
+ ## Pagination
+
+ - .skip()
+ - .limit()

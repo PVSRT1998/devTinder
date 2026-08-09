@@ -7,6 +7,7 @@ const { userAuth } = require('./middlewares/auth');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
+const userRouter = require('./routes/user');
 
 const port = 3001;
 
@@ -17,6 +18,7 @@ app.use(cookieParser()); // Middleware to parse cookies
 app.use('/', authRouter); // Use the authRouter for authentication routes
 app.use('/', profileRouter); // Use the profileRouter for profile routes
 app.use('/', requestRouter); // Use the requestRouter for request routes
+app.use('/', userRouter); // Use the userRouter for user routes
 
 connectDB()
     .then(() => {
