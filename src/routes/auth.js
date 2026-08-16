@@ -26,9 +26,15 @@ authRouter.post('/signup', async (req, res) => {
             skills
         });
 
-        await user.save();
+        const savedUser = await user.save();
+
+        const token = savedUser.getJWT();
+        res.cookie("token", token);
         console.log('User details saved successfully');
-        res.send("User details saved successfully");
+        res.json({
+            message: "User details saved successfully",
+            data: savedUser
+        });
     } catch (err) {
         console.error('Error saving user details', err);
         res.status(400).send("ERROR : " + err.message);
@@ -53,7 +59,10 @@ authRouter.post('/login', async (req, res) => {
         const token = user.getJWT();
         res.cookie("token", token);
 
-        return res.send("Login successful");
+        return res.json({
+            message: "Login successful",
+            data: user
+        });
     } catch (err) {
         console.error('Error during login', err);
         res.status(500).send("Error during login");

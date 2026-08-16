@@ -16,7 +16,7 @@ profileRouter.get('/profile/view', userAuth, async (req, res) => {
 profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
     try {
         const user = req.user; // Access the authenticated user from the request
-        const AllowedUpdates = ['firstName', 'lastName', 'emailId', 'age', 'gender', 'skills', 'about'];
+        const AllowedUpdates = ['firstName', 'lastName', 'emailId', 'age', 'gender', 'skills', 'about', 'photoUrl'];
         const updates = Object.keys(req.body);
         const isValidOperation = updates.every((update) => AllowedUpdates.includes(update));
 
@@ -30,7 +30,10 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
         });
 
         await user.save();
-        res.send("Profile updated successfully");
+        res.json({
+            message: "Profile Updated Successfully",
+            data: user
+        });
     } catch (err) {
         console.error('Error editing user profile', err);
         res.status(500).send("Error editing user profile");

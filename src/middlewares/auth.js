@@ -18,7 +18,7 @@ const userAuth = async (req, res, next) => {
         //Read the token from the request headers or cookies
         const { token } = req.cookies;
         if (!token) {
-            throw new Error('Unauthorized: No token provided');
+            return res.status(401).send({message: "Unauthorized, please login"})
         }
 
         // Validate the token and check if the user is authorized

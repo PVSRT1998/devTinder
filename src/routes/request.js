@@ -3,6 +3,7 @@ const { userAuth } = require('../middlewares/auth');
 const requestRouter = express.Router();
 const ConnectionRequest = require('../models/connectionRequest');
 const User = require('../models/user');
+const { default: mongoose } = require('mongoose');
 
 requestRouter.post('/request/send/:status/:userId', userAuth, async (req, res) => {
     try {
@@ -57,7 +58,7 @@ requestRouter.post('/request/review/:status/:requestId', userAuth, async (req, r
         if (!allowedStatus.includes(status)) {
             return res.status(400).send("Invalid status, please choose from 'accepted' or 'rejected'");
         }
-
+        console.log(requestId)
         const connectionRequest = await ConnectionRequest.findOne({ 
             _id: requestId,
             toUserId: loggedInUser._id, // Ensure that the logged-in user is the recipient of the connection request
