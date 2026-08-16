@@ -1,4 +1,5 @@
 const express = require('express');
+const { adminAuth } = require('./middlewares/auth');
 
 const app = express();
 
@@ -14,6 +15,14 @@ app.use('/', (req, res) => {
 
 app.use('/test', (req, res) => {
   res.send('Hello, from the server!');
+});
+
+
+
+app.use('/admin', adminAuth);
+
+app.get('/admin/getAllData', (req, res) => {
+    res.send('Welcome to the admin dashboard!');
 });
 
 app.listen(port, () => {
